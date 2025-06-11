@@ -1,6 +1,7 @@
-import { Response } from "express";
+import { Request, Response } from "express";
 import { AuthenticatedRequest } from "../middlewares/auth";
 import { fetchWordData } from "../services/DictionaryService";
+import { Word } from "../models/Word";
 
 export const addFavorite = async (req: AuthenticatedRequest, res: Response) => {
   const user = req.user;
@@ -51,5 +52,38 @@ export const getWord = async (req: AuthenticatedRequest, res: Response) => {
     res.status(200).json(wordData);
   } catch (error) {
     res.status(404).json({ message: 'Palavra não encontrada.' })
+  }
+}
+
+export const listWords = async (req: Request, res: Response) => {
+  const search = req.query.search?.toString() || '';
+  const limit = parseInt(req.query.limit as string) || 10;
+  const page = parseInt(req.query.page as string) || 1;
+
+  try {
+    const filter = search
+      ? { word: { $regex: `^${search}`, $options: 'i' } }
+      : {};
+
+    const totalDocs = await Word.countDocuments(filter);
+    const totalPages = Math.ceil(totalDocs / limit);
+    const skip = (page - 1) * limit;
+
+    const results = await Word.find(filter)
+      .sort({ word: 1 })
+      .skip(skip)
+      .limit(limit)
+      .lean();
+
+    res.status(200).json({
+      results: results.map(w => w.word),
+      totalDocs,
+      page,
+      totalPages,
+      hasNext: page < totalPages,
+      hasPrev: page > 1
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Erro ao buscar palavras.' })
   }
 }
