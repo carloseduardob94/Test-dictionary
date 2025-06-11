@@ -1,0 +1,13 @@
+# node-express
+/node-express/node_modules
+/node-express/dist
+/node-express/.env
+
+# next
+/next/node_modules
+/next/.next
+/next/.env
+
+# geral
+.DS_Store
+*.log
