@@ -5,7 +5,10 @@ import { setupSwagger } from './config/swagger';
 const PORT = process.env.PORT || 3333;
 
 const startServer = async () => {
-  await connectDatabase();
+  // Não conecta ao banco se estiver rodando testes
+  if (process.env.NODE_ENV !== 'test') {
+    await connectDatabase();
+  }
 
   setupSwagger(app);
 
