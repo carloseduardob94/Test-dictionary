@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export const connectDatabase = async (): Promise<void> => {
-  const uri = process.env.MONGODB_URI;
+  const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/dictionary-db';
 
   if (process.env.NODE_ENV === 'test') {
     console.log('🧪 Skipping DB connection in test environment');

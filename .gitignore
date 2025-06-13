@@ -2,6 +2,7 @@
 /node-express/node_modules
 /node-express/dist
 /node-express/.env
+/node-express/.dockerignore
 
 # next
 /next/node_modules
