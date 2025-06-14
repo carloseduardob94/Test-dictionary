@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Search, Star, StarOff } from "lucide-react";
 import { useAuth } from "@/app/context/AuthContext";
 import { useWordContext } from "@/app/context/WordContext";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface WordData {
   word: string;
@@ -15,13 +16,25 @@ interface WordData {
 const SearchForm = () => {
   const { favorites, refreshHistory, toggleFavorite } = useWordContext()
   const { token } = useAuth()
+  const router = useRouter()
+  const searchParams = useSearchParams()
+
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<WordData[]>([])
   const [loading, setLoading] = useState(false);
 
-  async function handleSearch(e: React.FormEvent) {
-    e.preventDefault()
-    if (!query.trim()) return;
+  useEffect(() => {
+    const term = searchParams.get("term");
+    if (term) {
+      setQuery(term);
+      handleSearch(undefined, term)
+    }
+  }, [])
+
+  async function handleSearch(e?: React.FormEvent, customQuery?: string) {
+    if (e) e.preventDefault()
+    const q = customQuery ?? query.trim()
+    if (!q) return;
 
     setLoading(true)
 
@@ -45,6 +58,7 @@ const SearchForm = () => {
       setResults(parsed);
       await refreshHistory();
 
+      router.push(`/?term=${encodeURIComponent(q)}`)
     } catch (error) {
       console.error("Erro na busca:", error);
       setResults([]);
