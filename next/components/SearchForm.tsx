@@ -5,6 +5,7 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Search } from "lucide-react";
 import { useAuth } from "@/app/context/AuthContext";
+import { useWordContext } from "@/app/context/WordContext";
 
 interface WordData {
   word: string;
@@ -12,6 +13,7 @@ interface WordData {
 }
 
 const SearchForm = () => {
+  const { refreshHistory } = useWordContext()
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<WordData[]>([])
   const [loading, setLoading] = useState(false);
@@ -41,6 +43,7 @@ const SearchForm = () => {
         : [];
 
       setResults(parsed);
+      await refreshHistory();
 
     } catch (error) {
       console.error("Erro na busca:", error);
