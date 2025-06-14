@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { Search } from "lucide-react";
+import { Search, Star, StarOff } from "lucide-react";
 import { useAuth } from "@/app/context/AuthContext";
 import { useWordContext } from "@/app/context/WordContext";
 
@@ -13,11 +13,11 @@ interface WordData {
 }
 
 const SearchForm = () => {
-  const { refreshHistory } = useWordContext()
+  const { favorites, refreshHistory, toggleFavorite } = useWordContext()
+  const { token } = useAuth()
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<WordData[]>([])
   const [loading, setLoading] = useState(false);
-  const { token } = useAuth()
 
   async function handleSearch(e: React.FormEvent) {
     e.preventDefault()
@@ -71,15 +71,40 @@ const SearchForm = () => {
       </form>
 
       <div className="space-y-4">
-        {results.map((item, index) => (
-          <div key={index} className="border p-4 rounded-lg shadow-sm bg-white dark:bg-zinc-900" >
-            <div className="flex justify-between items-center">
-              <h2 className="text-lg font-bold">{item.word}</h2>
-              <Button variant="outline" size="sm">Favoritar</Button>
+        {results.map((item, index) => {
+          const isFavorited = favorites.includes(item.word);
+
+          return (
+            <div
+              key={index}
+              className="border p-4 rounded-lg shadow-sm bg-white dark:bg-zinc-900"
+            >
+              <div className="flex justify-between items-center">
+                <h2 className="text-lg font-bold">{item.word}</h2>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => toggleFavorite(item.word, !isFavorited)}
+                >
+                  {isFavorited ? (
+                    <>
+                      <Star className="mr-1 h-4 w-4 fill-yellow-500 text-yellow-500" />
+                      Desfavoritar
+                    </>
+                  ) : (
+                    <>
+                      <StarOff className="mr-1 h-4 w-4" />
+                      Favoritar
+                    </>
+                  )}
+                </Button>
+              </div>
+              <p className="text-sm text-muted-foreground mt-2">
+                {item.definition}
+              </p>
             </div>
-            <p className="text-sm text-muted-foreground mt-2">{item.definition}</p>
-          </div>
-        ))}
+          );
+        })}
 
       </div>
     </div>
