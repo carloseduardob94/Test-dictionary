@@ -3,11 +3,12 @@
 import { useAuth } from "@/app/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function SignInPage() {
-  const { setToken } = useAuth()
+  const { setToken, setUser } = useAuth()
   const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState<string>('')
@@ -24,12 +25,20 @@ export default function SignInPage() {
       })
 
       const data = await res.json()
+      console.log("Data USER =>", data)
       if (!res.ok) throw new Error(data.message || "Erro ao autenticar")
 
-      localStorage.setItem("token", data.token)
-      setToken(data.token)
-      router.push("/")
+      const userLogged = {
+        name: data.name,
+        email
+      }
 
+      localStorage.setItem("token", data.token)
+      localStorage.setItem("user", JSON.stringify(userLogged));
+      setToken(data.token)
+      setUser(userLogged);
+
+      router.push("/")
     } catch (error: any) {
       setError(error.message);
     }
@@ -51,6 +60,8 @@ export default function SignInPage() {
         onChange={e => setPassword(e.target.value)}
       />
       <Button onClick={handleLogin} className="w-full" >Entrar</Button>
+
+      <p className="text-sm text-center">Não possui conta? <Link href="/signup" className="underline text-blue-500 hover:text-blue-700" >Crie agora!</Link></p>
 
       <span className="flex text-center items-center justify-center text-sm pt-4">
         Criado por
