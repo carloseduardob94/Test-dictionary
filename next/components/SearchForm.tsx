@@ -15,21 +15,21 @@ const SearchForm = () => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<WordData[]>([])
   const [loading, setLoading] = useState(false);
+  const { token } = useAuth()
 
   async function handleSearch(e: React.FormEvent) {
-
     e.preventDefault()
     if (!query.trim()) return;
 
     setLoading(true)
 
     try {
-      const { token } = useAuth()
       const res = await fetch(`http://localhost:3333/entries/en/${query}`, {
         headers: {
-          Authorization: `Bearer ${token}`
+          Authorization: `${token}`
         }
       });
+
       const data = await res.json()
       console.log(data)
 

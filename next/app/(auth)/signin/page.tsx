@@ -37,7 +37,7 @@ export default function SignInPage() {
 
   return (
     <div className="max-w-md mx-auto mt-12 space-y-4 border border-1 rounded-lg shadow-xl p-6">
-      <h2 className="text-2xl text-center font-bold">Entrar</h2>
+      <h2 className="text-2xl font-bold">Entrar</h2>
       {error && <p className="text-red-500">{error}</p>}
       <Input
         placeholder="Email"
