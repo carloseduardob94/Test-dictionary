@@ -74,8 +74,15 @@ const WordTabs = () => {
             />
           </PaginationItem>
 
-          {[...Array(maxPages)].slice(0, 3).map((_, i) => {
-            const page = i + 1;
+          {Array.from({ length: activeTab === "list" ? 5 : 3 }, (_, i) => {
+            const page = currentPage <= 3
+              ? i + 1
+              : currentPage >= totalPages - 2
+                ? totalPages - 4 + i
+                : currentPage - 2 + i;
+
+            if (page < 1 || page > totalPages) return null;
+
             return (
               <PaginationItem key={page}>
                 <PaginationLink
