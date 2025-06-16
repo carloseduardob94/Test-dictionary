@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { useAuth } from "@/app/context/AuthContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { useEffect, useState } from "react";
@@ -9,7 +10,11 @@ import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, Pagi
 
 const ITEMS_PER_PAGE = 12;
 
-const WordTabs = () => {
+type WordTabsProps = {
+  initialTab?: "list" | "favorites" | "history";
+};
+
+const WordTabs = ({ initialTab = "list" }: WordTabsProps) => {
   const { token } = useAuth();
   const { history, favorites, toggleFavorite } = useWordContext();
 
@@ -17,7 +22,7 @@ const WordTabs = () => {
   const [totalPages, setTotalPages] = useState(1)
   const [loading, setLoading] = useState(true);
 
-  const [activeTab, setActiveTab] = useState("list");
+  const [activeTab, setActiveTab] = React.useState<string>(() => initialTab);
   const [currentPage, setCurrentPage] = useState(1);
 
   const currentWords =
@@ -41,8 +46,6 @@ const WordTabs = () => {
   }, [activeTab]);
 
   useEffect(() => {
-    if (activeTab !== "list") return; // Evita chamada para outras abas
-
     const fetchWordList = async () => {
       try {
         const res = await fetch(`http://localhost:3333/entries/en?page=${currentPage}`, {
@@ -58,7 +61,11 @@ const WordTabs = () => {
       }
     };
 
-    if (token) fetchWordList();
+    if (activeTab === "list" && token) {
+      fetchWordList();
+    } else {
+      setLoading(false);
+    }
   }, [token, activeTab, currentPage]);
 
   const renderPagination = () => {
