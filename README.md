@@ -1,19 +1,67 @@
 
-# 📘 Dictionary API
+# 📘 Dictionary Fullstack App
 
-API para autenticação de usuários, consulta de definições de palavras em inglês, histórico de buscas e gerenciamento de palavras favoritas.
+Aplicação Fullstack que permite usuários autenticados buscarem definições de palavras em inglês, gerenciar favoritos e acompanhar histórico de buscas — com suporte a SSR, paginação e cache.
+
+---
 
 ## 🚀 Tecnologias Utilizadas
 
-- Node.js + Express
-- MongoDB + Mongoose
-- TypeScript
-- Docker + Docker Compose
-- JWT para autenticação
-- Swagger para documentação da API
-- Jest + Supertest para testes automatizados
+### 📦 Back-End:
+- **Node.js** + **Express**
+- **TypeScript**
+- **MongoDB** + **Mongoose**
+- **JWT** para autenticação segura
+- **Swagger** para documentação da API
+- **Jest** + **Supertest** para testes automatizados
+- **x-cache** e **x-response-time** nos headers
+- **Docker** + **Docker Compose**
+
+### 💻 Front-End:
+- **Next.js 15 (App Router)** com **TypeScript**
+- **TailwindCSS** + **Shadcn UI** (UI moderna e responsiva)
+- **Context API** para autenticação e controle global de palavras
+- **Client-side + Server-side Rendering (SSR)**
+- **Persistência entre abas**
+- **Paginação inteligente**
+- **Proteção de rotas com redirecionamento automático**
+- **Testes com Jest e React Testing Library**
 
 ---
+
+## ✅ Funcionalidades Entregues
+
+- [x] Criar conta e login com persistência via localStorage + cookies
+- [x] Tela protegida com redirecionamento automático se não autenticado
+- [x] Buscar palavras com fonética, significado e definições
+- [x] Adicionar/remover favoritos (persistente no banco)
+- [x] Histórico de buscas por usuário
+- [x] Paginação funcional e responsiva
+- [x] Dados carregados com SSR na primeira renderização
+- [x] Cache no back-end para reduzir chamadas à API externa
+- [x] Testes automatizados completos (frontend e backend)
+- [x] Projeto dockerizado (subida do zero com `docker-compose`)
+
+---
+
+## 🧪 Como Testar
+
+1. **Testes manuais**
+   - Criar conta, logar e navegar
+   - Buscar palavras e verificar resultados
+   - Alternar entre abas e verificar favoritos e histórico
+   - Validar SSR no primeiro carregamento
+   - Redirecionamento automático para `/signin` se sem token
+
+2. **Testes automatizados**
+   ```bash
+   # Backend
+   cd node-express
+   npm run test
+
+   # Frontend
+   cd next-client
+   npm run test
 
 ## 🛠️ Como Rodar Localmente
 
@@ -58,14 +106,6 @@ docker-compose up --build
 ```env
 MONGO_URI=mongodb://mongo:27017/dictionary-db
 JWT_SECRET=supersecretjwt
-```
-
----
-
-## 🧪 Rodando os Testes
-
-```bash
-npm run test
 ```
 
 ---
