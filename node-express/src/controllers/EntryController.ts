@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { AuthenticatedRequest } from "../middlewares/auth";
-import { fetchWordData } from "../services/DictionaryService";
+import { dictionaryService } from "../services/DictionaryService";
 import { Word } from "../models/Word";
 
 export const addFavorite = async (req: AuthenticatedRequest, res: Response) => {
@@ -38,7 +38,7 @@ export const getWord = async (req: AuthenticatedRequest, res: Response) => {
 
   try {
     //1. Consulta a API externa
-    const wordData = await fetchWordData(word);
+    const wordData = await dictionaryService.fetchWord(word);
 
     //2. Salva no histórico do usuário se ainda não estiver lá
     const alreadyInHistory = user.history.some((h: any) => h.word === word);

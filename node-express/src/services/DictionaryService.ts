@@ -1,7 +1,26 @@
-import axios from "axios"
+import NodeCache from "node-cache";
 
-export const fetchWordData = async (word: string) => {
-  const response = await axios.get(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
+const cache = new NodeCache({ stdTTL: 3600 }); //1h de cache
 
-  return response.data
+export class DictionaryService {
+  async fetchWord(term: string) {
+    const cacheKey = `word:${term}`;
+    const cached = cache.get(cacheKey);
+
+    if (cached) {
+      return cached;
+    }
+
+    const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${term}`);
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch word");
+    }
+
+    const data = await response.json();
+    cache.set(cacheKey, data);
+    return data;
+  }
 }
+
+export const dictionaryService = new DictionaryService();

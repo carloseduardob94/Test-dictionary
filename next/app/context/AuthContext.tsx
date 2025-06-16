@@ -13,6 +13,7 @@ interface AuthContextType {
   user: User | null;
   setUser: (user: User | null) => void;
   logout: () => void;
+  isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -20,6 +21,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [token, setToken] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true)
 
   const logout = () => {
     localStorage.removeItem("token");
@@ -40,10 +42,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         console.error("Erro ao fazer parse do user:", err);
       }
     }
+
+    setIsLoading(false);
   }, []);
 
   return (
-    <AuthContext.Provider value={{ token, setToken, user, setUser, logout }}>
+    <AuthContext.Provider value={{ token, setToken, user, setUser, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
   );

@@ -7,15 +7,17 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function Home() {
-  const { token } = useAuth();
+  const { token, isLoading } = useAuth()
   const router = useRouter();
 
+
   useEffect(() => {
-    if (!token) {
+    if (!isLoading && !token) {
       router.replace("/signin")
     }
-  }, [token, router]);
+  }, [token, isLoading, router]);
 
+  if (isLoading) return null;
   if (!token) return null;
 
   return (

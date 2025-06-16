@@ -47,7 +47,6 @@ const SearchForm = () => {
       });
 
       const data = await res.json()
-      console.log(data)
 
       const parsed = Array.isArray(data)
         ? data.map((d: any) => ({

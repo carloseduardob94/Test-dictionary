@@ -8,6 +8,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.17.0",
     "mongoose": "^8.15.1",
+    "node-cache": "^5.1.2",
     "swagger-ui-express": "^5.0.1"
   },
   "name": "express",

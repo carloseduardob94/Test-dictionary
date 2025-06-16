@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 const Header = () => {
   const { user, logout } = useAuth();
   const router = useRouter();
-  console.log(user)
 
   const handleLogout = () => {
     logout()
