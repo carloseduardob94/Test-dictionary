@@ -12,14 +12,16 @@ const ITEMS_PER_PAGE = 12;
 
 type WordTabsProps = {
   initialTab?: "list" | "favorites" | "history";
+  initialWords?: string[];
+  initialTotalPages?: number;
 };
 
-const WordTabs = ({ initialTab = "list" }: WordTabsProps) => {
+const WordTabs = ({ initialTab = "list", initialWords, initialTotalPages }: WordTabsProps) => {
   const { token } = useAuth();
   const { history, favorites, toggleFavorite } = useWordContext();
 
-  const [wordList, setWordList] = useState<string[]>([]);
-  const [totalPages, setTotalPages] = useState(1)
+  const [wordList, setWordList] = useState<string[]>(initialWords || []);
+  const [totalPages, setTotalPages] = useState(initialTotalPages || 1)
   const [loading, setLoading] = useState(true);
 
   const [activeTab, setActiveTab] = React.useState<string>(() => initialTab);

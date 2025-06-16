@@ -32,6 +32,8 @@ export default function SignInPage() {
         name: data.name,
         email
       }
+      const expiration = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toUTCString();
+      document.cookie = `token=${data.token}; path=/; expires=${expiration};`;
 
       localStorage.setItem("token", data.token)
       localStorage.setItem("user", JSON.stringify(userLogged));
